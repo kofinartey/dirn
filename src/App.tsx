@@ -1,10 +1,14 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { Provider } from "react-redux";
+import store from "./state/store";
 import DirnApp from "./DirnApp";
 
 function App() {
-  return <DirnApp />;
+  return (
+    <Provider store={store}>
+      <DirnApp />
+    </Provider>
+  );
 }
 
 export default App;
