@@ -34,4 +34,9 @@ export interface UserInterface {
   role: string;
   _id: string;
   avatar?: string;
+  settings: {
+    darkTheme: boolean;
+    currency: string;
+    _id: string;
+  };
 }

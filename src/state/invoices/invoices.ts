@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import data from "../../data.json";
 import { InvoiceInterface } from "../../types";
 
+//TODO:
+// const initialState: InvoiceInterface[] = [];
 const initialState: InvoiceInterface[] = data;
 
 const invoicesSlice = createSlice({

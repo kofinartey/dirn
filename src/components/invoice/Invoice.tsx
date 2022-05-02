@@ -30,7 +30,9 @@ function Invoice({ data }: InvoiceProps) {
   //// ***** MAIN FUNCTION RENDER ******
   return (
     <Link
-      to={`/invoice/${data._id}/${data.id}`}
+      // TODO
+      // to={`/invoice/${data._id}/${data.id}`}
+      to={`/invoice/${data.id}`}
       className={classes.Invoice}
       style={{
         backgroundColor: darkTheme ? "#1E2139" : "",

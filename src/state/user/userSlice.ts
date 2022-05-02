@@ -7,6 +7,11 @@ const userDetails: UserInterface = {
   email: "kofinartey@gmail.com",
   role: "user",
   _id: "1234567890",
+  settings: {
+    darkTheme: false,
+    currency: "$",
+    _id: "09876543321",
+  },
 };
 
 const initialState = {

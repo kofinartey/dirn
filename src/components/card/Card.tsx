@@ -8,7 +8,6 @@ type CardProps = {
 
 function Card({ children }: CardProps) {
   const darkTheme = useAppSelector((state) => state.darkTheme);
-  console.log(darkTheme);
   const styles = makeStyles({
     Card: {
       backgroundColor: darkTheme ? "#1E2139" : "white",
