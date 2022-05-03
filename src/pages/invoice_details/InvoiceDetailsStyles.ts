@@ -29,6 +29,9 @@ const InvoiceDetailsStyles = makeStyles({
       margin: "0 0.5rem",
     },
   },
+  top_card__buttons: {
+    display: "none",
+  },
   status__wrapper: {
     width: "100%",
     display: "flex",
@@ -93,6 +96,11 @@ const InvoiceDetailsStyles = makeStyles({
     backgroundColor: "#F9FAFE",
     borderRadius: "0.5rem",
   },
+  pricing__mobile: {},
+  pricing__desktop: {
+    display: "none",
+  },
+
   item: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
@@ -181,6 +189,9 @@ const InvoiceDetailsStyles = makeStyles({
       width: "auto",
       justifyContent: "flex-start",
     },
+    top_card__buttons: {
+      display: "block",
+    },
     details_card: {
       gridTemplateColumns: "repeat(3, 1fr)",
       gridTemplateRows: "repeat(3, 1fr)",
@@ -213,6 +224,12 @@ const InvoiceDetailsStyles = makeStyles({
     },
     pricing: {
       gridColumn: "1/4",
+    },
+    pricing__mobile: {
+      display: "none",
+    },
+    pricing__desktop: {
+      display: "block",
     },
     grandTotal: {
       padding: "1.5rem 2rem",

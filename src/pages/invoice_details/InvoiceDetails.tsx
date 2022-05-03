@@ -49,11 +49,6 @@ function InvoiceDetails() {
     (state) => state.user.userInfo.settings.currency
   );
   //   const formDisplay = useAppSelector((state) => state.formDisplay);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  window.addEventListener("resize", () => {
-    let width = window.innerWidth;
-    setWindowWidth(width);
-  });
   const formatDate = (date: string) => {
     return dayjs(date).format("DD MMM YYYY");
   };
@@ -110,39 +105,35 @@ function InvoiceDetails() {
                         </div>
 
                         {/* buttons to show in status bar at larger screen widths */}
-                        {windowWidth > 768 && (
-                          <div>
-                            <Button
-                              color="#7E88C3"
-                              backgroundColor={
-                                darkTheme ? "#252945" : "#F9FAFE"
-                              }
-                              onClick={() => {
-                                // dispatch(toggleEditForm());
-                              }}
-                            >
-                              Edit
-                            </Button>
+                        <div className={classes.top_card__buttons}>
+                          <Button
+                            color="#7E88C3"
+                            backgroundColor={darkTheme ? "#252945" : "#F9FAFE"}
+                            onClick={() => {
+                              // dispatch(toggleEditForm());
+                            }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            color="white"
+                            backgroundColor="#EC5757"
+                            onClick={() => {
+                              // dispatch(toggleConfirmation());
+                            }}
+                          >
+                            Delete
+                          </Button>
+                          {invoice.status === "pending" && (
                             <Button
                               color="white"
-                              backgroundColor="#EC5757"
-                              onClick={() => {
-                                // dispatch(toggleConfirmation());
-                              }}
+                              backgroundColor="#7C5DFA"
+                              onClick={handleMarkAsPaid}
                             >
-                              Delete
+                              Mark as Paid
                             </Button>
-                            {invoice.status === "pending" && (
-                              <Button
-                                color="white"
-                                backgroundColor="#7C5DFA"
-                                onClick={handleMarkAsPaid}
-                              >
-                                Mark as Paid
-                              </Button>
-                            )}
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </div>
                     </Card>
 
@@ -208,9 +199,9 @@ function InvoiceDetails() {
                             backgroundColor: darkTheme ? "#252945" : "",
                           }}
                         >
-                          <h1>HERE OOOOOO</h1>
-                          {windowWidth < 768 ? (
-                            invoice.items!.map((item) => (
+                          {/* pricing section on mobile */}
+                          <section className={classes.pricing__mobile}>
+                            {invoice.items!.map((item) => (
                               <div className={classes.item} key={item.name}>
                                 <Text as="h5">{item.name}</Text>
                                 <Text as="h5">
@@ -221,37 +212,38 @@ function InvoiceDetails() {
                                   {item.total.toFixed(2)}
                                 </Text>
                               </div>
-                            ))
-                          ) : (
-                            <>
-                              <div className={classes.item_thead}>
-                                <p>Item Name</p>
-                                <p>QTY.</p>
-                                <p>Price</p>
-                                <p>Total</p>
-                              </div>
-                              {invoice.items!.map((item) => {
-                                return (
-                                  <div
-                                    className={classes.item_tbody}
-                                    key={item.name}
-                                  >
-                                    <Text as="h5">{item.name}</Text>
-                                    <Text as="h5">{item.quantity}</Text>
-                                    <Text as="h5">
-                                      {currency}{" "}
-                                      {formatAmount(item.price.toFixed(2))}
-                                    </Text>
-                                    <Text as="h5">
-                                      {currency}{" "}
-                                      {item.total &&
-                                        formatAmount(item.total.toFixed(2))}
-                                    </Text>
-                                  </div>
-                                );
-                              })}
-                            </>
-                          )}
+                            ))}
+                          </section>
+
+                          {/* pricing section on desktop */}
+                          <section className={classes.pricing__desktop}>
+                            <div className={classes.item_thead}>
+                              <p>Item Name</p>
+                              <p>QTY.</p>
+                              <p>Price</p>
+                              <p>Total</p>
+                            </div>
+                            {invoice.items!.map((item) => {
+                              return (
+                                <div
+                                  className={classes.item_tbody}
+                                  key={item.name}
+                                >
+                                  <Text as="h5">{item.name}</Text>
+                                  <Text as="h5">{item.quantity}</Text>
+                                  <Text as="h5">
+                                    {currency}{" "}
+                                    {formatAmount(item.price.toFixed(2))}
+                                  </Text>
+                                  <Text as="h5">
+                                    {currency}{" "}
+                                    {item.total &&
+                                      formatAmount(item.total.toFixed(2))}
+                                  </Text>
+                                </div>
+                              );
+                            })}
+                          </section>
 
                           <div
                             className={classes.grandTotal}

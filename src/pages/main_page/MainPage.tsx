@@ -9,6 +9,7 @@ import InvoiceList from "../../components/invoice_list/InvoiceList";
 // import { toggleNewForm } from "../../redux/form_display/formDisplayAction";
 import plus from "../../assets/icons/icon-plus.svg";
 import MainPageStyles from "./MainPageStyles";
+import Text from "../../components/text/Text";
 // import InvoiceForm from "../invoice_form/InvoiceForm";
 
 const listVariants = {
@@ -34,11 +35,6 @@ function MainPage() {
   //   const formDisplay = useSelector((state) => state.formDisplay);
   // const showNotifications = useSelector((state) => state.notifications.visible);
   const dispatch = useAppDispatch();
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  window.addEventListener("resize", () => {
-    let width = window.innerWidth;
-    setWindowWidth(width);
-  });
 
   const [filters, setFilters] = useState({
     draft: false,
@@ -66,12 +62,9 @@ function MainPage() {
       <div className={classes.wrapper}>
         <section className={classes.top}>
           <div className={classes.top__left}>
-            <h4 style={{ color: darkTheme ? "white" : "" }}>Invoices</h4>
-            <p style={{ color: darkTheme ? "white" : "" }}>
-              {windowWidth < 768
-                ? `${invoiceData.length} invoices`
-                : `There are ${invoiceData.length}  total invoices`}
-            </p>
+            <Text as="h4">Invoices</Text>
+            <Text as="p">{`${invoiceData.length} invoices`}</Text>
+            <Text as="p">{`There are ${invoiceData.length}  total invoices`}</Text>
           </div>
           <div className={`${classes.top__right}`}>
             {/* ...filter */}
@@ -86,7 +79,8 @@ function MainPage() {
               <div className={classes.icon__container}>
                 <img src={plus} alt="new invoice" />
               </div>
-              <h5>{windowWidth < 768 ? "New" : "New Invoice"}</h5>
+              <h5>New</h5>
+              <h5>New Invoice</h5>
             </div>
           </div>
         </section>

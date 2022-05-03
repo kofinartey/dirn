@@ -50,7 +50,9 @@ const InvoiceStyles = makeStyles({
     gridRow: "2/3",
     justifySelf: "end",
   },
-  arrowRight: {},
+  arrowRight: {
+    display: "none",
+  },
 
   "@media(min-width: 48rem)": {
     Invoice: {
@@ -85,6 +87,7 @@ const InvoiceStyles = makeStyles({
       alignSelf: "center",
     },
     arrowRight: {
+      display: "block",
       gridColumn: "7/8",
       gridRow: "1/2",
       alignSelf: "center",

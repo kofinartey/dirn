@@ -29,6 +29,9 @@ const MainPageStyles = makeStyles({
       fontSize: "0.75rem",
       color: "#888EB0",
     },
+    "& p:nth-of-type(2)": {
+      display: "none",
+    },
   },
   top__right: {
     display: "flex",
@@ -52,8 +55,9 @@ const MainPageStyles = makeStyles({
     },
     "& h5": {
       color: "white",
-      margin: "0 .7rem",
+      margin: "0.7rem",
     },
+    "& h5:nth-of-type(2)": { display: "none" },
     "&:hover": {
       cursor: "pointer",
     },
@@ -62,12 +66,22 @@ const MainPageStyles = makeStyles({
   list__container: {},
 
   "@media(min-width: 48rem)": {
+    new__invoice: {
+      "& h5:nth-of-type(1)": { display: "none" },
+      "& h5:nth-of-type(2)": { display: "block" },
+    },
     top__left: {
       "& h4": {
         fontSize: "2rem",
       },
       "& p": {
         color: "#888EB0",
+      },
+      "& p:nth-of-type(1)": {
+        display: "none",
+      },
+      "& p:nth-of-type(2)": {
+        display: "block",
       },
     },
   },

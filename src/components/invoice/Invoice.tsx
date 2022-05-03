@@ -19,11 +19,6 @@ function Invoice({ data }: InvoiceProps) {
   //   const currency = useSelector(
   //     (state) => state.user.userInfo.settings.currency
   //   );
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  window.addEventListener("resize", () => {
-    let width = window.innerWidth;
-    setWindowWidth(width);
-  });
 
   //add commas to amount
 
@@ -55,11 +50,10 @@ function Invoice({ data }: InvoiceProps) {
       <div className={classes.status}>
         <StatusCard status={data.status}>{data.status}</StatusCard>
       </div>
-      {windowWidth > 768 && (
-        <div className={classes.arrowRight}>
-          <img src={arrowRight} alt="" />
-        </div>
-      )}
+
+      <div className={classes.arrowRight}>
+        <img src={arrowRight} alt="" />
+      </div>
     </Link>
   );
 }

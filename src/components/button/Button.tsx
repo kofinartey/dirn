@@ -1,5 +1,4 @@
 import { makeStyles } from "@mui/styles";
-import { string } from "yup";
 import colors from "../../utils/colors";
 
 type ButtonProps = {
