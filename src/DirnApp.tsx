@@ -1,16 +1,27 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import { Routes, Route } from "react-router-dom";
+import { useAppSelector } from "./utils/redux";
 import MainPage from "./pages/main_page/MainPage";
 import InvoiceDetails from "./pages/invoice_details/InvoiceDetails";
+import Appbar from "./components/appbar/Appbar";
+import DirnAppStyles from "./DirnAppStyles";
 
 function DirnApp() {
+  const classes = DirnAppStyles();
+  const darkTheme = useAppSelector((state) => state.darkTheme);
   return (
-    <Router>
+    <div
+      className={classes.InvoiceApp}
+      style={{ backgroundColor: darkTheme ? "#141625" : "#F8F8FB " }}
+    >
+      <nav className={classes.Appbar}>
+        <Appbar />
+      </nav>
+
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/invoice/:id" element={<InvoiceDetails />} />
       </Routes>
-    </Router>
+    </div>
   );
 }
 

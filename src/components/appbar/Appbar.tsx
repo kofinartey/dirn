@@ -5,9 +5,9 @@ import { switchTheme } from "../../state/theme/theme";
 import Avatar from "../avatar/Avatar";
 import AppbarStyles from "./AppbarStyles";
 import { IconButton } from "@mui/material";
-import logo from "../../assets/logo.svg";
-import sun from "../../assets/icon-sun.svg";
-import moon from "../../assets/icon-moon.svg";
+import logo from "../../assets/icons/logo.svg";
+import sun from "../../assets/icons/icon-sun.svg";
+import moon from "../../assets/icons/icon-moon.svg";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 
 function Appbar() {

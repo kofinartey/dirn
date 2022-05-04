@@ -10,7 +10,7 @@ import InvoiceList from "../../components/invoice_list/InvoiceList";
 import plus from "../../assets/icons/icon-plus.svg";
 import MainPageStyles from "./MainPageStyles";
 import Text from "../../components/text/Text";
-// import InvoiceForm from "../invoice_form/InvoiceForm";
+import Form from "../../components/form/Form";
 
 const listVariants = {
   hidden: {
@@ -91,6 +91,7 @@ function MainPage() {
         </section>
 
         {/* {formDisplay.new && <InvoiceForm />} */}
+        <Form />
       </div>
       {/* <div>{<Notification />}</div> */}
     </motion.main>

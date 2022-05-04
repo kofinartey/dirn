@@ -1,13 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import invoicesSlice from "./invoices/invoices";
-import themeSlice from "./theme/theme";
-import userSlice from "./user/userSlice";
-
-const allReducers = {
-  invoices: invoicesSlice.reducer,
-  darkTheme: themeSlice.reducer,
-  user: userSlice.reducer,
-};
+import allReducers from "./allReducers";
 
 const store = configureStore({
   reducer: allReducers,

@@ -22,7 +22,6 @@ const MainPageStyles = makeStyles({
   },
   top__left: {
     "& h4": {
-      color: "#0C0E16",
       fontSize: "1.25rem",
     },
     "& p": {
