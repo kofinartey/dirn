@@ -1,29 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../../utils/redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import dayjs from "dayjs";
 
 //my imports
 import schema from "./schema";
-
-import Input from "../form_elements/Input";
+import { generateID } from "../../helper_functions/generateID";
 import Label from "../form_elements/Label";
+import Input from "../form_elements/Input";
+import Select from "../form_elements/Select";
 import GoBack from "../go_back/GoBack";
 import Text from "../text/Text";
+import Button from "../button/Button";
+import ItemList from "../items_list/ItemList";
+import { addInvoiceActionCreator } from "../../state/invoices/invoices";
 
-import { InvoiceInterface } from "../../types";
+import { InvoiceInterface, PaymentTermInterface } from "../../types";
 import leftArrow from "../../assets/icons/icon-arrow-left.svg";
 import FormStyles from "./FormStyles";
 import FormControl from "../form_elements/FormControl";
+import colors from "../../utils/colors";
 
 type FormProps = {
   values?: InvoiceInterface;
 };
 
+//MAIN COMPONENT FUNCTION
+//MAIN COMPONENT FUNCTION
 function Form({ values }: FormProps) {
   const classes = FormStyles();
+  const dispatch = useAppDispatch();
   const darkTheme = useAppSelector((state) => state.darkTheme);
+  const itemList = useAppSelector((state) => state.items);
+  const [itemListError, setItemListError] = useState(true);
   const [validating, setValidating] = useState(true);
   const {
     register,
@@ -37,8 +48,81 @@ function Form({ values }: FormProps) {
       : yupResolver(schema.no_validate),
   });
 
-  const submitForm = () => {};
+  const [total, setTotal] = useState(0);
+  //handle date and calculate due date from payTerms
+  //recalculate dueDate anytime date or payment terms change(s)
+  const today = dayjs(new Date()).format("YYYY-MM-DD");
+  const [date, setDate] = useState(today);
+
+  const paymentTermOptions: PaymentTermInterface[] = [
+    { id: 1, value: 1, name: "Net 1 Day" },
+    { id: 2, value: 7, name: "Net 7 Days" },
+    { id: 3, value: 14, name: "Net 14 Days" },
+    { id: 4, value: 30, name: "Net 30 Days" },
+  ];
+  const [payTerms, setPayTerms] = useState(paymentTermOptions[0]);
+  const [dueDate, setDueDate] = useState(
+    dayjs(date).add(payTerms.value, "days").format("D MMM YYYY")
+  );
+  useEffect(() => {
+    setDueDate(dayjs(date).add(payTerms.value, "days").format("D MMM YYYY"));
+  }, [date, payTerms]);
+
+  //monitor itemlist length and change errors accordingly
+  useEffect(() => {
+    if (itemList.length > 0) setItemListError(false);
+    else setItemListError(true);
+  }, [itemList]);
+
+  //add new invoice to state ,hide form and reset input fields
+  //@ts-ignore
+  const submitForm = (data) => {
+    if (validating && itemListError) {
+      console.log("Add and item ");
+      return;
+    }
+    //define the shape of the object to send to the server
+    let dataToAdd = {
+      id: generateID(),
+      createdAt: dayjs(date).format("D MMM YYYY"),
+      paymentDue: dueDate,
+      description: data.description,
+      paymentTerms: payTerms.value,
+      clientName: data.clientName,
+      clientEmail: data.clientEmail,
+      status: validating ? "pending" : "draft",
+      senderAddress: {
+        street: data.street,
+        city: data.city,
+        postCode: data.postcode,
+        country: data.country,
+      },
+      clientAddress: {
+        street: data.clientStreet,
+        city: data.clientCity,
+        postCode: data.clientPostCode,
+        country: data.clientCountry,
+      },
+      items: itemList,
+      total: itemList.length === 0 ? 0 : total,
+    };
+    //decide whether to send complete form or send draft
+    dispatch(addInvoiceActionCreator(dataToAdd));
+    //TODO
+    // if (validating) dispatch(postInvoice(dataToAdd));
+    // else dispatch(postDraft(dataToAdd));
+    // resetAll();
+  };
+
   const handleEdit = () => {};
+  //remove validation for draft and reset validation state
+  //NB: clicking on draft button calls both handleSaveDraft() and submitForm()
+  const handleSaveDraft = () => {
+    setValidating(false);
+    setTimeout(() => {
+      setValidating(true);
+    }, 100);
+  };
 
   // MAIN RENDER
   // MAIN RENDER
@@ -69,7 +153,10 @@ function Form({ values }: FormProps) {
       ></motion.div>
 
       {/* ***** FORM CONTENT ***** */}
-      <div className={classes.FormContent}>
+      <div
+        className={classes.FormContent}
+        style={{ backgroundColor: darkTheme ? colors.dark.dark : "" }}
+      >
         <div className={classes.wrapper}>
           {/* form top */}
           <div>
@@ -102,9 +189,7 @@ function Form({ values }: FormProps) {
           {/* ---- form begins ----- */}
           <form onSubmit={handleSubmit(values ? handleEdit : submitForm)}>
             {/* ----- owner details ----- */}
-            <Text as="h5" className={classes.group__heading}>
-              Bill From
-            </Text>
+            <h5 className={classes.group__heading}>Bill From</h5>
             <div className={classes.form__control}>
               <Label htmlFor="street">Street Address</Label>
               <Input
@@ -142,9 +227,7 @@ function Form({ values }: FormProps) {
             </div>
 
             {/* ------ client details -------- */}
-            <Text as="h5" className={classes.group__heading}>
-              Bill To
-            </Text>
+            <h5 className={classes.group__heading}>Bill To</h5>
             <FormControl>
               <Label htmlFor="clientName">Client's Name</Label>
               <Input
@@ -196,6 +279,77 @@ function Form({ values }: FormProps) {
                 />
               </FormControl>
             </div>
+
+            <div className={classes.pay__date}>
+              <FormControl>
+                <Label htmlFor="invoiceDate">Invoice Date</Label>
+                <Input
+                  type="date"
+                  id="invoiceDate"
+                  value={values ? values.createdAt : date}
+                  onChange={(e) => {
+                    setDate(e.target.value);
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <Label htmlFor="invoiceDate">Payment Terms</Label>
+                <Select
+                  options={paymentTermOptions}
+                  selectedOption={payTerms}
+                  setSelectedOption={setPayTerms}
+                />
+              </FormControl>
+            </div>
+
+            <FormControl>
+              <Label htmlFor="description">Description</Label>
+              <Input
+                id="description"
+                value={values && values.description}
+                {...register("description")}
+              />
+            </FormControl>
+
+            {/* ----- ITEM DETAILS ----- */}
+            <div className={classes.itemList}>
+              <ItemList items={values && values.items} />
+            </div>
+
+            {/* error if no item is added */}
+            {itemListError && (
+              <p className={classes.itemError}>
+                ** Please add an item or save as draft for later
+              </p>
+            )}
+
+            <footer className={classes.footer}>
+              {/* display different versions of the footer for new and edit forms */}
+              <Button
+                color={darkTheme ? "white" : colors.dark.primary}
+                backgroundColor={darkTheme ? "#252945" : colors.grey.light}
+                onClick={(e) => {
+                  e.preventDefault();
+                  //TODO
+                  // resetAll();
+                }}
+              >
+                Discard
+              </Button>
+              {!values && (
+                <Button
+                  color="white"
+                  backgroundColor="#373B53"
+                  //TODO
+                  // onClick={handleSaveDraft}
+                >
+                  Save as Draft
+                </Button>
+              )}
+              <Button color="white" backgroundColor="#7C5DFA">
+                {values ? "Save Changes" : "Save & Send"}
+              </Button>
+            </footer>
           </form>
         </div>
       </div>

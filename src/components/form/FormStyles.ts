@@ -74,6 +74,7 @@ const FormStyles = makeStyles({
     gridGap: "1rem",
     "& div:nth-of-type(3)": { gridColumn: "1/3", girdRow: "2/3" },
   },
+  pay__date: {},
 
   // ITEM LIST STYLES
   itemList: {
@@ -156,7 +157,6 @@ const FormStyles = makeStyles({
     FormContent: {
       width: "80%",
       top: "5rem",
-      left: "5rem",
       borderRadius: "0 1.5rem 1.5rem 0",
     },
     city_post_country: {
@@ -227,6 +227,8 @@ const FormStyles = makeStyles({
       height: "100vh",
       width: "60%",
       top: "0",
+      left: "5rem",
+
       paddingLeft: "1.5rem",
       // left: "6.4375rem",
     },

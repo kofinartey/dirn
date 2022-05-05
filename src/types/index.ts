@@ -40,3 +40,8 @@ export interface UserInterface {
     _id: string;
   };
 }
+export interface PaymentTermInterface {
+  id: number;
+  value: number;
+  name: string;
+}

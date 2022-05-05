@@ -1,4 +1,4 @@
-const formatAmount = (x: string) => {
+const formatAmount = (x: number | string) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
