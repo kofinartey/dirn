@@ -15,8 +15,8 @@ const itemsSlice = createSlice({
       // if (toRemove) state.splice(toRemove, 1);
       state.splice(toRemove, 1);
     },
-    reset: (state) => {
-      state = initialState;
+    reset: () => {
+      return initialState;
     },
   },
 });

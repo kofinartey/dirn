@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import InvoiceList from "../../components/invoice_list/InvoiceList";
 // import Filters from "../filters/Filters";
 // import Notification from "../notification/Notification";
-// import { toggleNewForm } from "../../redux/form_display/formDisplayAction";
+import { toggleForm } from "../../state/form_display/formDisplaySlice";
 import plus from "../../assets/icons/icon-plus.svg";
 import MainPageStyles from "./MainPageStyles";
 import Text from "../../components/text/Text";
@@ -32,7 +32,7 @@ function MainPage() {
   const classes = MainPageStyles();
   const darkTheme = useAppSelector((state) => state.darkTheme);
   const invoiceData = useAppSelector((state) => state.invoices);
-  //   const formDisplay = useSelector((state) => state.formDisplay);
+  const formDisplay = useAppSelector((state) => state.formDisplay);
   // const showNotifications = useSelector((state) => state.notifications.visible);
   const dispatch = useAppDispatch();
 
@@ -73,7 +73,7 @@ function MainPage() {
             <div
               className={classes.new__invoice}
               onClick={() => {
-                // dispatch(toggleNewForm());
+                dispatch(toggleForm());
               }}
             >
               <div className={classes.icon__container}>
@@ -90,8 +90,7 @@ function MainPage() {
           <InvoiceList filters={filters} />
         </section>
 
-        {/* {formDisplay.new && <InvoiceForm />} */}
-        <Form />
+        {formDisplay && <Form />}
       </div>
       {/* <div>{<Notification />}</div> */}
     </motion.main>

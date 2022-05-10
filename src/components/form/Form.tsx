@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../../utils/redux";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import dayjs from "dayjs";
 
@@ -16,8 +16,10 @@ import Text from "../text/Text";
 import Button from "../button/Button";
 import ItemList from "../items_list/ItemList";
 import { addInvoiceActionCreator } from "../../state/invoices/invoices";
-
+import { resetItemActionCreator } from "../../state/items/items";
+import { toggleForm } from "../../state/form_display/formDisplaySlice";
 import { InvoiceInterface, PaymentTermInterface } from "../../types";
+import FormInputInterface from "./FormInputTypes";
 import leftArrow from "../../assets/icons/icon-arrow-left.svg";
 import FormStyles from "./FormStyles";
 import FormControl from "../form_elements/FormControl";
@@ -41,7 +43,7 @@ function Form({ values }: FormProps) {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormInputInterface>({
     mode: "onBlur",
     resolver: validating
       ? yupResolver(schema.validate)
@@ -74,9 +76,17 @@ function Form({ values }: FormProps) {
     else setItemListError(true);
   }, [itemList]);
 
+  const resetAll = () => {
+    dispatch(toggleForm());
+    reset();
+    dispatch(resetItemActionCreator());
+    setDate(today);
+    setPayTerms(paymentTermOptions[0]);
+  };
+
   //add new invoice to state ,hide form and reset input fields
-  //@ts-ignore
-  const submitForm = (data) => {
+  const submitForm: SubmitHandler<FormInputInterface> = (data) => {
+    console.log("submitting");
     if (validating && itemListError) {
       console.log("Add and item ");
       return;
@@ -108,13 +118,16 @@ function Form({ values }: FormProps) {
     };
     //decide whether to send complete form or send draft
     dispatch(addInvoiceActionCreator(dataToAdd));
+    resetAll();
     //TODO
     // if (validating) dispatch(postInvoice(dataToAdd));
-    // else dispatch(postDraft(dataToAdd));
     // resetAll();
+    // else dispatch(postDraft(dataToAdd));
   };
 
-  const handleEdit = () => {};
+  const handleEdit: SubmitHandler<FormInputInterface> = (data) => {
+    console.log("editing");
+  };
   //remove validation for draft and reset validation state
   //NB: clicking on draft button calls both handleSaveDraft() and submitForm()
   const handleSaveDraft = () => {
@@ -146,10 +159,13 @@ function Form({ values }: FormProps) {
       {/* ***** OVERLAY ***** */}
       <motion.div
         className={classes.overlay}
+        onClick={() => {
+          resetAll();
+        }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.1 }}
+        transition={{ duration: 0.3 }}
       ></motion.div>
 
       {/* ***** FORM CONTENT ***** */}
@@ -187,17 +203,25 @@ function Form({ values }: FormProps) {
           </div>
 
           {/* ---- form begins ----- */}
+
+          {/* <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              console.log("submitting");
+            }}
+          > */}
           <form onSubmit={handleSubmit(values ? handleEdit : submitForm)}>
             {/* ----- owner details ----- */}
             <h5 className={classes.group__heading}>Bill From</h5>
-            <div className={classes.form__control}>
+            <FormControl>
               <Label htmlFor="street">Street Address</Label>
               <Input
                 id="street"
                 value={values && values.senderAddress.street}
                 {...register("street")}
               />
-            </div>
+              <small className={classes.errors}>{errors.street?.message}</small>
+            </FormControl>
 
             <div className={classes.city_post_country}>
               <FormControl>
@@ -207,6 +231,7 @@ function Form({ values }: FormProps) {
                   value={values && values.senderAddress.city}
                   {...register("city")}
                 />
+                <p className={classes.errors}>{errors.city?.message}</p>
               </FormControl>
               <FormControl>
                 <Label htmlFor="postcode">Post Code</Label>
@@ -215,6 +240,7 @@ function Form({ values }: FormProps) {
                   value={values && values.senderAddress.postCode}
                   {...register("postcode")}
                 />
+                <p className={classes.errors}>{errors.postcode?.message}</p>
               </FormControl>
               <FormControl>
                 <Label htmlFor="country">Country</Label>
@@ -223,6 +249,7 @@ function Form({ values }: FormProps) {
                   value={values && values.senderAddress.country}
                   {...register("country")}
                 />
+                <p className={classes.errors}>{errors.country?.message}</p>
               </FormControl>
             </div>
 
@@ -235,6 +262,7 @@ function Form({ values }: FormProps) {
                 value={values && values.clientName}
                 {...register("clientName")}
               />
+              <p className={classes.errors}>{errors.clientName?.message}</p>
             </FormControl>
             <FormControl>
               <Label htmlFor="clientEmail">Client's Email</Label>
@@ -243,6 +271,7 @@ function Form({ values }: FormProps) {
                 value={values && values.clientEmail}
                 {...register("clientEmail")}
               />
+              <p className={classes.errors}>{errors.clientEmail?.message}</p>
             </FormControl>
             <FormControl>
               <Label htmlFor="clientStreet">Street Address</Label>
@@ -251,6 +280,7 @@ function Form({ values }: FormProps) {
                 value={values && values.clientAddress.street}
                 {...register("clientStreet")}
               />
+              <p className={classes.errors}>{errors.clientStreet?.message}</p>
             </FormControl>
 
             <div className={classes.city_post_country}>
@@ -261,6 +291,7 @@ function Form({ values }: FormProps) {
                   value={values && values.clientAddress.city}
                   {...register("clientCity")}
                 />
+                <p className={classes.errors}>{errors.clientCity?.message}</p>
               </FormControl>
               <FormControl>
                 <Label htmlFor="clientPostCode">Post Code</Label>
@@ -269,6 +300,9 @@ function Form({ values }: FormProps) {
                   value={values && values.clientAddress.postCode}
                   {...register("clientPostCode")}
                 />
+                <p className={classes.errors}>
+                  {errors.clientPostCode?.message}
+                </p>
               </FormControl>
               <FormControl>
                 <Label htmlFor="clientCountry">Country</Label>
@@ -277,6 +311,9 @@ function Form({ values }: FormProps) {
                   value={values && values.clientAddress.country}
                   {...register("clientCountry")}
                 />
+                <p className={classes.errors}>
+                  {errors.clientCountry?.message}
+                </p>
               </FormControl>
             </div>
 
@@ -309,6 +346,7 @@ function Form({ values }: FormProps) {
                 value={values && values.description}
                 {...register("description")}
               />
+              <p className={classes.errors}>{errors.description?.message}</p>
             </FormControl>
 
             {/* ----- ITEM DETAILS ----- */}
@@ -326,12 +364,12 @@ function Form({ values }: FormProps) {
             <footer className={classes.footer}>
               {/* display different versions of the footer for new and edit forms */}
               <Button
+                type="button"
                 color={darkTheme ? "white" : colors.dark.primary}
                 backgroundColor={darkTheme ? "#252945" : colors.grey.light}
                 onClick={(e) => {
                   e.preventDefault();
-                  //TODO
-                  // resetAll();
+                  resetAll();
                 }}
               >
                 Discard
@@ -340,13 +378,12 @@ function Form({ values }: FormProps) {
                 <Button
                   color="white"
                   backgroundColor="#373B53"
-                  //TODO
-                  // onClick={handleSaveDraft}
+                  onClick={handleSaveDraft}
                 >
                   Save as Draft
                 </Button>
               )}
-              <Button color="white" backgroundColor="#7C5DFA">
+              <Button color="white" backgroundColor="#7C5DFA" type="submit">
                 {values ? "Save Changes" : "Save & Send"}
               </Button>
             </footer>

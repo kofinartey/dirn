@@ -10,6 +10,7 @@ function FormControl({ children }: FormControlProps) {
       display: "flex",
       flexDirection: "column",
       marginBottom: "1.75rem",
+      position: "relative",
     },
   })();
   return <div className={classes.formControl}>{children}</div>;

@@ -15,6 +15,7 @@ function Button({
   backgroundColor,
   leftIcon,
   rightIcon,
+  ...rest
 }: ButtonProps) {
   const classes = makeStyles({
     Button: {
@@ -28,11 +29,15 @@ function Button({
       borderRadius: "2rem",
       border: "none",
       cursor: "pointer",
+      transition: "all ease-in 0.2s",
+      "&:hover": {
+        opacity: 0.8,
+      },
     },
   })();
 
   return (
-    <button className={classes.Button}>
+    <button className={classes.Button} {...rest}>
       {leftIcon && <img src={leftIcon} alt="leftIcon" />}
       {children}
       {rightIcon && <img src={rightIcon} alt="leftIcon" />}

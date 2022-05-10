@@ -3,7 +3,7 @@ import { makeStyles } from "@mui/styles";
 const FormStyles = makeStyles({
   FormContent: {
     width: "100%",
-    height: "100%",
+    // height: "100%",
     position: "fixed",
     top: "4.5rem",
     // left: "-100rem",
@@ -74,6 +74,13 @@ const FormStyles = makeStyles({
     gridGap: "1rem",
     "& div:nth-of-type(3)": { gridColumn: "1/3", girdRow: "2/3" },
   },
+  errors: {
+    color: "#EC5757",
+    position: "absolute",
+    fontSize: "0.75rem",
+    top: "0",
+    right: "0",
+  },
   pay__date: {},
 
   // ITEM LIST STYLES
@@ -137,16 +144,17 @@ const FormStyles = makeStyles({
   },
   footer: {
     width: "100%",
-    height: "90px",
+    // height: "90px",
     marginTop: "4rem",
   },
   new_footer: {
+    backgroundColor: "red",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     // boxShadow: "0px 5px 100px 17px rgba(0,0,0,0.43)",
     "& button": {
-      margin: "0.2rem",
+      // margin: "0.2rem",
     },
   },
 
@@ -157,6 +165,7 @@ const FormStyles = makeStyles({
     FormContent: {
       width: "80%",
       top: "5rem",
+      bottom: 0,
       borderRadius: "0 1.5rem 1.5rem 0",
     },
     city_post_country: {
