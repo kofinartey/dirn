@@ -22,7 +22,7 @@ type DeleteConfirmationProps = {
   _id?: string;
 };
 
-function DeleteConfirmation(props: DeleteConfirmationProps) {
+function DeleteConfirmation({ deleteType, id, _id }: DeleteConfirmationProps) {
   const classes = DeleteComfirmationStyles();
   const darkTheme = useAppSelector((state) => state.darkTheme);
   const deleteConfirmation = useAppSelector(
@@ -43,7 +43,7 @@ function DeleteConfirmation(props: DeleteConfirmationProps) {
   // }, [deleteConfirmation]);
 
   //value to check user input against
-  const textTarget = `${user.firstName.toLowerCase()}/#${props.id}`;
+  const textTarget = `${user.firstName.toLowerCase()}/#${id}`;
 
   useEffect(() => {
     if (confirmText.trim() === textTarget) {
@@ -60,7 +60,7 @@ function DeleteConfirmation(props: DeleteConfirmationProps) {
   const handleDelete = () => {
     if (confirmText.trim() === textTarget) {
       console.log("equal");
-      dispatch(removeInvoiceActionCreator({ id: props.id }));
+      dispatch(removeInvoiceActionCreator({ id: id }));
       //TODO: change after implementing backend
       // dispatch(removeInvoiceActionCreator(props._id));
     } else {
@@ -76,6 +76,32 @@ function DeleteConfirmation(props: DeleteConfirmationProps) {
     //   dispatch(hideNotification());
     // }, 2000);
   };
+
+  const invoiceInstruction = (
+    <>
+      <Text as="p">Are you sure you want to delete invoice #{id}?</Text>
+      <Text as="p">This action cannot be undone.</Text>
+      <p>
+        Please type{" "}
+        <span>
+          {user.firstName.toLowerCase()}/#{id}
+        </span>{" "}
+        to confirm
+      </p>
+    </>
+  );
+
+  const allInvoicesInstruction = (
+    <>
+      <Text as="p">Are you sure you want to delete ALL INVOICES?</Text>
+      <Text as="p">This action cannot be undone.</Text>
+      <p>Please type password to confirm.</p>;
+    </>
+  );
+
+  const instruction =
+    deleteType === "invoice" ? invoiceInstruction : allInvoicesInstruction;
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <div
@@ -92,18 +118,8 @@ function DeleteConfirmation(props: DeleteConfirmationProps) {
         >
           <Card>
             <Text as="h2">Comfirm Deletion</Text>
-            <Text as="p">
-              Are you sure you want to delete invoice #{props.id}?
-            </Text>
-            <Text as="p">This action cannot be undone.</Text>
 
-            <p>
-              Please type{" "}
-              <span>
-                {user.firstName.toLowerCase()}/#{props.id}
-              </span>{" "}
-              to confirm
-            </p>
+            {instruction}
             <Input value={confirmText} onChange={handleChange} />
 
             <div className={classes.btn_container}>
@@ -114,7 +130,7 @@ function DeleteConfirmation(props: DeleteConfirmationProps) {
                   dispatch(toggleDeleteConfirmation());
                 }}
               >
-                Cancel
+                CANCEL
               </Button>
               <Button
                 color="white"
@@ -122,7 +138,11 @@ function DeleteConfirmation(props: DeleteConfirmationProps) {
                 onClick={handleDelete}
                 disabled={btnDisabled}
               >
-                Delete
+                {deleteType === "invoice"
+                  ? "DELETE"
+                  : deleteType === "all_invoices"
+                  ? "DELETE ALL INVOICES"
+                  : "DELETE ACCOUNT"}
               </Button>
             </div>
           </Card>

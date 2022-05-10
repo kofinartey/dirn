@@ -15,6 +15,7 @@ import { toggleForm } from "../../state/form_display/formDisplaySlice";
 import { toggleDeleteConfirmation } from "../../state/delete_confirmation/deleteConfirmation";
 // import { toggleConfirmation } from "../../redux/delete_confirmation/deleteConfirmationActions";
 // import { patchStatus } from "../../redux/invoice/invoiceActions";
+import { markInvoiceActionCreator } from "../../state/invoices/invoices";
 import formatAmount from "../../helper_functions/formatAmount";
 import InvoiceDetailsStyles from "./InvoiceDetailsStyles";
 import leftArrow from "../../assets/icon-arrow-left.svg";
@@ -59,6 +60,8 @@ function InvoiceDetails() {
   };
 
   const handleMarkAsPaid = () => {
+    dispatch(markInvoiceActionCreator({ id: invoice!.id }));
+    //TODO
     // dispatch(patchStatus(_id));
   };
   return (

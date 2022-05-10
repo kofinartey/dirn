@@ -42,6 +42,12 @@ export interface UserInterface {
 }
 export interface PaymentTermInterface {
   id: number;
-  value: number;
+  value: string;
+  name: string;
+}
+
+export interface CurrencyInterface {
+  id: number;
+  value: string;
   name: string;
 }

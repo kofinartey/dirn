@@ -70,17 +70,19 @@ function Form({ values }: FormProps) {
   const [date, setDate] = useState(today);
 
   const paymentTermOptions: PaymentTermInterface[] = [
-    { id: 1, value: 1, name: "Net 1 Day" },
-    { id: 2, value: 7, name: "Net 7 Days" },
-    { id: 3, value: 14, name: "Net 14 Days" },
-    { id: 4, value: 30, name: "Net 30 Days" },
+    { id: 1, value: "1", name: "Net 1 Day" },
+    { id: 2, value: "7", name: "Net 7 Days" },
+    { id: 3, value: "14", name: "Net 14 Days" },
+    { id: 4, value: "30", name: "Net 30 Days" },
   ];
   const [payTerms, setPayTerms] = useState(paymentTermOptions[0]);
   const [dueDate, setDueDate] = useState(
-    dayjs(date).add(payTerms.value, "days").format("D MMM YYYY")
+    dayjs(date).add(parseInt(payTerms.value), "days").format("D MMM YYYY")
   );
   useEffect(() => {
-    setDueDate(dayjs(date).add(payTerms.value, "days").format("D MMM YYYY"));
+    setDueDate(
+      dayjs(date).add(parseInt(payTerms.value), "days").format("D MMM YYYY")
+    );
   }, [date, payTerms]);
 
   //monitor itemlist length and change errors accordingly
@@ -108,7 +110,7 @@ function Form({ values }: FormProps) {
       createdAt: dayjs(date).format("D MMM YYYY"),
       paymentDue: dueDate,
       description: data.description,
-      paymentTerms: payTerms.value,
+      paymentTerms: parseInt(payTerms.value),
       clientName: data.clientName,
       clientEmail: data.clientEmail,
       status: validating ? "pending" : "draft",
@@ -142,7 +144,7 @@ function Form({ values }: FormProps) {
       createdAt: dayjs(date).format("D MMM YYYY"),
       paymentDue: dueDate,
       description: data.description,
-      paymentTerms: payTerms.value,
+      paymentTerms: parseInt(payTerms.value),
       clientName: data.clientName,
       clientEmail: data.clientEmail,
       status: validating ? "pending" : "draft",

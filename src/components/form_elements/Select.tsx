@@ -4,24 +4,25 @@ import { makeStyles } from "@mui/styles";
 import { useAppSelector } from "../../utils/redux";
 import colors from "../../utils/colors";
 import { fontWeight } from "@mui/system";
-import { PaymentTermInterface } from "../../types/index";
+import { PaymentTermInterface, CurrencyInterface } from "../../types/index";
 
 type SelectProps = {
   options: {
     id: number;
-    value: number;
+    value: string;
     name: string;
   }[];
   selectedOption: {
     id: number;
-    value: number;
+    value: string;
     name: string;
   };
-  setSelectedOption: React.Dispatch<React.SetStateAction<PaymentTermInterface>>;
+  setSelectedOption: any;
+  // | React.Dispatch<React.SetStateAction<PaymentTermInterface>>
+  // | React.Dispatch<React.SetStateAction<CurrencyInterface>>;
 };
 
 function Select({ selectedOption, options, setSelectedOption }: SelectProps) {
-  //   const [selectedOption, setSelectedOption] = useState(options[0]);
   const darkTheme = useAppSelector((state) => state.darkTheme);
   const classes = makeStyles({
     wrapper: {
