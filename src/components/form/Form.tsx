@@ -15,7 +15,10 @@ import GoBack from "../go_back/GoBack";
 import Text from "../text/Text";
 import Button from "../button/Button";
 import ItemList from "../items_list/ItemList";
-import { addInvoiceActionCreator } from "../../state/invoices/invoices";
+import {
+  addInvoiceActionCreator,
+  editInvoiceActionCreator,
+} from "../../state/invoices/invoices";
 import { resetItemActionCreator } from "../../state/items/items";
 import { toggleForm } from "../../state/form_display/formDisplaySlice";
 import { InvoiceInterface, PaymentTermInterface } from "../../types";
@@ -51,6 +54,16 @@ function Form({ values }: FormProps) {
   });
 
   const [total, setTotal] = useState(0);
+  useEffect(() => {
+    const calculateTotal = () => {
+      let calculated = 0;
+      itemList.forEach((item) => {
+        calculated += item.total;
+      });
+      setTotal(calculated);
+    };
+    calculateTotal();
+  }, [itemList]);
   //handle date and calculate due date from payTerms
   //recalculate dueDate anytime date or payment terms change(s)
   const today = dayjs(new Date()).format("YYYY-MM-DD");
@@ -86,9 +99,7 @@ function Form({ values }: FormProps) {
 
   //add new invoice to state ,hide form and reset input fields
   const submitForm: SubmitHandler<FormInputInterface> = (data) => {
-    console.log("submitting");
     if (validating && itemListError) {
-      console.log("Add and item ");
       return;
     }
     //define the shape of the object to send to the server
@@ -126,7 +137,34 @@ function Form({ values }: FormProps) {
   };
 
   const handleEdit: SubmitHandler<FormInputInterface> = (data) => {
-    console.log("editing");
+    let dataToAdd = {
+      id: values!.id,
+      createdAt: dayjs(date).format("D MMM YYYY"),
+      paymentDue: dueDate,
+      description: data.description,
+      paymentTerms: payTerms.value,
+      clientName: data.clientName,
+      clientEmail: data.clientEmail,
+      status: validating ? "pending" : "draft",
+      senderAddress: {
+        street: data.street,
+        city: data.city,
+        postCode: data.postcode,
+        country: data.country,
+      },
+      clientAddress: {
+        street: data.clientStreet,
+        city: data.clientCity,
+        postCode: data.clientPostCode,
+        country: data.clientCountry,
+      },
+      items: itemList,
+      total: itemList.length === 0 ? 0 : total,
+    };
+    dispatch(editInvoiceActionCreator(dataToAdd));
+    //TODO
+    // dispatch(patchInvoice(props.values._id, dataToAdd));
+    resetAll();
   };
   //remove validation for draft and reset validation state
   //NB: clicking on draft button calls both handleSaveDraft() and submitForm()
@@ -169,9 +207,13 @@ function Form({ values }: FormProps) {
       ></motion.div>
 
       {/* ***** FORM CONTENT ***** */}
-      <div
+      <motion.div
         className={classes.FormContent}
         style={{ backgroundColor: darkTheme ? colors.dark.dark : "" }}
+        initial={{ x: -1000 }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.2 }}
+        exit={{ x: -1000 }}
       >
         <div className={classes.wrapper}>
           {/* form top */}
@@ -187,9 +229,7 @@ function Form({ values }: FormProps) {
                   className={classes.goBack}
                   style={{ color: darkTheme ? "white" : "" }}
                   onClick={() => {
-                    // TODO
-                    // dispatch(hideForm());
-                    // resetInputs();
+                    resetAll();
                   }}
                 >
                   <img src={leftArrow} alt="" />
@@ -203,13 +243,6 @@ function Form({ values }: FormProps) {
           </div>
 
           {/* ---- form begins ----- */}
-
-          {/* <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              console.log("submitting");
-            }}
-          > */}
           <form onSubmit={handleSubmit(values ? handleEdit : submitForm)}>
             {/* ----- owner details ----- */}
             <h5 className={classes.group__heading}>Bill From</h5>
@@ -389,7 +422,7 @@ function Form({ values }: FormProps) {
             </footer>
           </form>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }

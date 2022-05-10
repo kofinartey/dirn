@@ -234,11 +234,11 @@ const FormStyles = makeStyles({
   "@media(min-width:64rem)": {
     FormContent: {
       height: "100vh",
-      width: "60%",
+      width: "65%",
       top: "0",
       left: "5rem",
 
-      paddingLeft: "1.5rem",
+      paddingLeft: "8rem",
       // left: "6.4375rem",
     },
     wrapper: {

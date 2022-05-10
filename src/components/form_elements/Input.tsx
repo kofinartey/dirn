@@ -20,6 +20,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         borderRadius: "0.3rem",
         padding: "0.9rem",
         color: darkTheme ? "white" : "",
+        fontSize: "0.9rem",
+        fontWeight: "bold",
         // backgroundColor: darkTheme && "#1E2139",
         backgroundColor: darkTheme ? "#252945" : "",
         borderColor: props.error

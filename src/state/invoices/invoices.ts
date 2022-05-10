@@ -14,9 +14,12 @@ const invoicesSlice = createSlice({
       state.unshift(action.payload);
     },
     edit: (state, action: PayloadAction<InvoiceInterface>) => {
-      let toEdit = state.find((invoice) => invoice.id === action.payload.id);
+      console.log("edit called");
+      let toEdit = state.findIndex(
+        (invoice) => invoice.id === action.payload.id
+      );
       if (toEdit) {
-        toEdit = action.payload;
+        state.splice(toEdit, 1, action.payload);
       }
     },
     remove: (state, action: PayloadAction<{ id: string }>) => {

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../utils/redux";
+
+//my imports
 import { addItemActionCreator } from "../../state/items/items";
 import Item from "./Item";
 import Label from "../form_elements/Label";
@@ -22,17 +24,13 @@ function ItemList({ items }: ItemsListProps) {
   const [name, setName] = useState("");
   const [qty, setQty] = useState("");
   const [price, setPrice] = useState("");
-  // const [name, updateName, resetName] = useInputState("");
-  // const [qty, updateQty, resetQty] = useInputState("");
-  // const [price, updatePrice, resetPrice] = useInputState("");
   const [total, updateTotal] = useState("");
 
-  //for edit forms push the editted invoice's items into the item state
+  //FOR EDIT FORM push the editted invoice's items into the item state
   useEffect(() => {
     if (items) {
       items.map((item) => {
-        // TODO
-        // dispatch(addItem(item));
+        dispatch(addItemActionCreator(item));
         return item;
       });
     }

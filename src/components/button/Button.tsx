@@ -7,6 +7,7 @@ type ButtonProps = {
   backgroundColor?: string;
   leftIcon?: string;
   rightIcon?: string;
+  disabled?: boolean;
 } & React.ComponentProps<"button">;
 
 function Button({
@@ -15,12 +16,15 @@ function Button({
   backgroundColor,
   leftIcon,
   rightIcon,
+  disabled,
   ...rest
 }: ButtonProps) {
   const classes = makeStyles({
     Button: {
       color: color ? color : "white",
-      backgroundColor: backgroundColor
+      backgroundColor: disabled
+        ? "rgba(0,0,0,0.2)"
+        : backgroundColor
         ? backgroundColor
         : colors.purple.primary,
       fontSize: "0.75rem",
@@ -31,7 +35,7 @@ function Button({
       cursor: "pointer",
       transition: "all ease-in 0.2s",
       "&:hover": {
-        opacity: 0.8,
+        opacity: !disabled && 0.8,
       },
     },
   })();

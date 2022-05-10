@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../utils/redux";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 //my imports
 import InvoiceList from "../../components/invoice_list/InvoiceList";
@@ -90,7 +90,8 @@ function MainPage() {
           <InvoiceList filters={filters} />
         </section>
 
-        {formDisplay && <Form />}
+        {/* form */}
+        <AnimatePresence>{formDisplay && <Form />}</AnimatePresence>
       </div>
       {/* <div>{<Notification />}</div> */}
     </motion.main>
