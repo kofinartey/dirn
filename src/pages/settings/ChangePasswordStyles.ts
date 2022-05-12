@@ -1,6 +1,7 @@
 import { makeStyles } from "@mui/styles";
 
 const ChangePasswordStyles = makeStyles({
+  password: {},
   formControl: {
     position: "relative",
     marginBottom: "0.8rem",

@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../utils/redux";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 //my imports
 // import { changePassword } from "../../redux/auth/authActions";
+import Label from "../../components/form_elements/Label";
+import Input from "../../components/form_elements/Input";
+import Button from "../../components/button/Button";
+import FormControl from "../../components/form_elements/FormControl";
 import { passwordSchema } from "./settingsSchema";
 import ChangePasswordStyles from "./ChangePasswordStyles";
+import Text from "../../components/text/Text";
+
+interface ChangePasswordInterface {
+  // currentPassword: string;
+  // newPassword: string;
+  // confirmPassword: string
+}
 
 const ChangePasswordForm = () => {
   const classes = ChangePasswordStyles();
@@ -26,7 +37,8 @@ const ChangePasswordForm = () => {
     visible: false,
   });
 
-  const submitPassword = (data) => {
+  const submitPassword: SubmitHandler<ChangePasswordInterface> = (data) => {
+    console.log(data);
     // dispatch(changePassword(data, setChangingStatus, reset));
   };
 
@@ -40,55 +52,44 @@ const ChangePasswordForm = () => {
     <div className={classes.password}>
       <p>Change Password</p>
       <form onSubmit={handleSubmit(submitPassword)}>
-        <div className={classes.formControl}>
-          <p className={classes.error}>{errors.currentPassword?.message}</p>
-          <label className={classes.label} htmlFor="currentPassword">
-            Current Password
-          </label>
-          <input
-            className={classes.input}
+        <FormControl>
+          <Text as="p">{errors.currentPassword?.message}</Text>
+          <Label htmlFor="currentPassword">Current Passwork</Label>
+          <Input
             type="password"
             id="currentPassword"
-            style={inputStyle}
             {...register("currentPassword")}
           />
-        </div>
-
-        <div className={classes.formControl}>
-          <p className={classes.error}>{errors.newPassword?.message}</p>
-          <label className={classes.label} htmlFor="newPassword">
-            New Password
-          </label>
-          <input
+        </FormControl>
+        <FormControl>
+          <Text as="p">{errors.newPassword?.message}</Text>
+          <Label htmlFor="newPassword">Current Passwork</Label>
+          <Input
             type="password"
-            className={classes.input}
-            style={inputStyle}
+            id="newPassword"
             {...register("newPassword")}
           />
-        </div>
-
-        <div className={classes.formControl}>
-          <p className={classes.error}>{errors.confirmPassword?.message}</p>
-          <label className={classes.label} htmlFor="confirmPassword">
-            Confirm Password
-          </label>
-          <input
+        </FormControl>
+        <FormControl>
+          <Text as="p">{errors.confirmPassword?.message}</Text>
+          <Label htmlFor="confirmPassword">Current Passwork</Label>
+          <Input
             type="password"
-            style={inputStyle}
-            className={classes.input}
+            id="confirmPassword"
             {...register("confirmPassword")}
-            errors={errors.confirmPassword && "Passwords don't match"}
           />
-        </div>
+          {/* errors={errors.confirmPassword && "Passwords don't match"} */}
+        </FormControl>
+
         <p style={{ fontSize: "0.8rem", color: "#ec5757" }}>
           {changingStatus.visible && `*** ${changingStatus.message}`}
         </p>
-        <button
+        <Button
           className={classes.button}
-          style={{ backgroundColor: darkTheme && "#252945" }}
+          style={{ backgroundColor: darkTheme ? "#252945" : "" }}
         >
           CHANGE PASSWORD
-        </button>
+        </Button>
       </form>
     </div>
   );

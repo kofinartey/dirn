@@ -29,11 +29,12 @@ import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import leftArrow from "../../assets/icon-arrow-left.svg";
 import SettingsStyles from "./SettingsStyles";
 import { CurrencyInterface } from "../../types";
+import GoBack from "../../components/go_back/GoBack";
 
 function Settings() {
   config();
   const classes = SettingsStyles();
-  const history = useHistory();
+  // const history = useHistory();
   const dispatch = useAppDispatch();
   const darkTheme = useAppSelector((state) => state.darkTheme);
   const deleteConfirmation = useAppSelector(
@@ -95,10 +96,7 @@ function Settings() {
       {/* conditionally render image selection modals */}
       {showImageSelector && <SelectImage toggle={setShowImageSelector} />}
 
-      <div className={classes.goBack} onClick={() => history.push("/main")}>
-        <img src={leftArrow} alt="" />
-        <p>Go back</p>
-      </div>
+      <GoBack />
 
       <div className={classes.wrapper}>
         {/* profile section */}
