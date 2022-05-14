@@ -4,7 +4,7 @@ const SettingsStyles = makeStyles({
   Settings: {
     width: "100%",
     height: "100vh",
-    padding: "5rem 0",
+    padding: "8rem 0",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -30,6 +30,7 @@ const SettingsStyles = makeStyles({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    textAlign: "center",
   },
   profile_pic: {
     width: "8rem",
@@ -58,6 +59,7 @@ const SettingsStyles = makeStyles({
   },
 
   profile__btn: {
+    display: "block",
     padding: "0.8rem",
     borderRadius: "0.5rem",
     fontWeight: 700,
@@ -123,10 +125,6 @@ const SettingsStyles = makeStyles({
   ///MEDIA QUERIES
   ///MEDIA QUERIES
   "@media(min-width: 45rem)": {
-    Settings: {
-      padding: "0",
-      margin: "5rem 0",
-    },
     goBack: {
       margin: "0 22%",
     },
@@ -168,8 +166,13 @@ const SettingsStyles = makeStyles({
   },
 
   "@media(min-width: 64rem)": {
+    Settings: {
+      padding: "3rem 0",
+    },
     wrapper: {
       width: "80%",
+      minWidth: "50rem",
+      maxWidth: "55rem",
       marginLeft: "6rem",
       display: "flex",
       justifyContent: "space-between",

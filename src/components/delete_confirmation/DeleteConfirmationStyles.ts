@@ -1,4 +1,5 @@
 import { makeStyles } from "@mui/styles";
+import colors from "../../utils/colors";
 
 const DeleteComfirmationStyles = makeStyles({
   overlay: {
@@ -15,10 +16,11 @@ const DeleteComfirmationStyles = makeStyles({
     // opacity: "1",
     // pointerEvents: "none",
     transition: "all .5s ease-in-out",
+    zIndex: 2,
   },
 
   deleteCard: {
-    width: "90%",
+    width: "80%",
     maxWidth: "30rem",
     "& h2": {
       marginTop: "1rem",
@@ -26,6 +28,7 @@ const DeleteComfirmationStyles = makeStyles({
     },
     "& p": {
       lineHeight: "1.5rem",
+      fontSize: "0.8rem",
       // marginBottom: "2rem",
       "& span": {
         color: "red",
@@ -37,6 +40,10 @@ const DeleteComfirmationStyles = makeStyles({
       display: "flex",
       justifyContent: "flex-end",
     },
+  },
+  highlight: {
+    fontSize: "1rem",
+    color: colors.red.light,
   },
   btn_container: {
     marginTop: "2rem",

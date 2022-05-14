@@ -5,7 +5,7 @@ import { useAppSelector, useAppDispatch } from "../../utils/redux";
 //my imports
 
 import { removeInvoiceActionCreator } from "../../state/invoices/invoices";
-import { toggleDeleteConfirmation } from "../../state/delete_confirmation/deleteConfirmation";
+import { hideDeleteConfirmation } from "../../state/delete_confirmation/deleteConfirmation";
 // import {
 //   deletedNotification,
 //   hideNotification,
@@ -17,17 +17,17 @@ import DeleteComfirmationStyles from "./DeleteConfirmationStyles";
 import Text from "../text/Text";
 
 type DeleteConfirmationProps = {
-  deleteType: "invoice" | "all_invoices" | "account";
   id: string;
   _id?: string;
 };
 
-function DeleteConfirmation({ deleteType, id, _id }: DeleteConfirmationProps) {
+function DeleteConfirmation({ id, _id }: DeleteConfirmationProps) {
   const classes = DeleteComfirmationStyles();
   const darkTheme = useAppSelector((state) => state.darkTheme);
   const deleteConfirmation = useAppSelector(
     (state) => state.deleteConfirmation
   );
+  const { deleteType } = deleteConfirmation;
   const user = useAppSelector((state) => state.user.userInfo);
   const dispatch = useAppDispatch();
 
@@ -44,7 +44,6 @@ function DeleteConfirmation({ deleteType, id, _id }: DeleteConfirmationProps) {
 
   //value to check user input against
   const textTarget = `${user.firstName.toLowerCase()}/#${id}`;
-
   useEffect(() => {
     if (confirmText.trim() === textTarget) {
       setBtnDisabled(false);
@@ -52,6 +51,9 @@ function DeleteConfirmation({ deleteType, id, _id }: DeleteConfirmationProps) {
       setBtnDisabled(true);
     }
   }, [confirmText]);
+
+  //check when to disable delete button
+  const checkButtonDisabled = deleteType === "account" ? btnDisabled : false;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmText(event.target.value);
@@ -83,7 +85,7 @@ function DeleteConfirmation({ deleteType, id, _id }: DeleteConfirmationProps) {
       <Text as="p">This action cannot be undone.</Text>
       <p>
         Please type{" "}
-        <span>
+        <span className={classes.highlight}>
           {user.firstName.toLowerCase()}/#{id}
         </span>{" "}
         to confirm
@@ -95,19 +97,37 @@ function DeleteConfirmation({ deleteType, id, _id }: DeleteConfirmationProps) {
     <>
       <Text as="p">Are you sure you want to delete ALL INVOICES?</Text>
       <Text as="p">This action cannot be undone.</Text>
-      <p>Please type password to confirm.</p>;
+      <p>
+        Please type <span className={classes.highlight}>password</span> to
+        confirm.
+      </p>
+    </>
+  );
+
+  const accountInstrunction = (
+    <>
+      <Text as="p">Are you sure you want to delete YOUR ACCOUNT?</Text>
+      <Text as="p">This action cannot be undone.</Text>
+      <p>
+        Please type <span className={classes.highlight}>password</span> to
+        confirm.
+      </p>
     </>
   );
 
   const instruction =
-    deleteType === "invoice" ? invoiceInstruction : allInvoicesInstruction;
+    deleteType === "invoice"
+      ? invoiceInstruction
+      : deleteType === "account"
+      ? accountInstrunction
+      : allInvoicesInstruction;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <div
         className={classes.overlay}
         onClick={() => {
-          dispatch(toggleDeleteConfirmation());
+          dispatch(hideDeleteConfirmation());
         }}
       >
         <div
@@ -127,7 +147,7 @@ function DeleteConfirmation({ deleteType, id, _id }: DeleteConfirmationProps) {
                 color="#7E88C3"
                 backgroundColor={darkTheme ? "#252945" : "#F9FAFE"}
                 onClick={() => {
-                  dispatch(toggleDeleteConfirmation());
+                  dispatch(hideDeleteConfirmation());
                 }}
               >
                 CANCEL
@@ -136,11 +156,11 @@ function DeleteConfirmation({ deleteType, id, _id }: DeleteConfirmationProps) {
                 color="white"
                 backgroundColor="#EC5757"
                 onClick={handleDelete}
-                disabled={btnDisabled}
+                disabled={checkButtonDisabled}
               >
-                {deleteType === "invoice"
+                {deleteConfirmation.deleteType === "invoice"
                   ? "DELETE"
-                  : deleteType === "all_invoices"
+                  : deleteConfirmation.deleteType === "all-invoices"
                   ? "DELETE ALL INVOICES"
                   : "DELETE ACCOUNT"}
               </Button>

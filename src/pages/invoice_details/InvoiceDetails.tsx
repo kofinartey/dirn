@@ -12,7 +12,10 @@ import Card from "../../components/card/Card";
 import StatusCard from "../../components/statusCard/StatusCard";
 import DeleteConfirmation from "../../components/delete_confirmation/DeleteConfirmation";
 import { toggleForm } from "../../state/form_display/formDisplaySlice";
-import { toggleDeleteConfirmation } from "../../state/delete_confirmation/deleteConfirmation";
+import {
+  toggleDeleteInvoice,
+  hideDeleteConfirmation,
+} from "../../state/delete_confirmation/deleteConfirmation";
 // import { toggleConfirmation } from "../../redux/delete_confirmation/deleteConfirmationActions";
 // import { patchStatus } from "../../redux/invoice/invoiceActions";
 import { markInvoiceActionCreator } from "../../state/invoices/invoices";
@@ -89,9 +92,8 @@ function InvoiceDetails() {
           <>
             <GoBack />
           </>
-          {deleteConfirmation && (
+          {deleteConfirmation.visible && (
             <DeleteConfirmation
-              deleteType="invoice"
               id={invoice!.id}
               // _id={invoice._id}
               // history={props.history}
@@ -122,7 +124,7 @@ function InvoiceDetails() {
                   color="white"
                   backgroundColor="#EC5757"
                   onClick={() => {
-                    dispatch(toggleDeleteConfirmation());
+                    dispatch(toggleDeleteInvoice());
                   }}
                 >
                   Delete
@@ -277,7 +279,7 @@ function InvoiceDetails() {
               color="white"
               backgroundColor="#EC5757"
               onClick={() => {
-                dispatch(toggleDeleteConfirmation());
+                dispatch(toggleDeleteInvoice());
               }}
             >
               Delete

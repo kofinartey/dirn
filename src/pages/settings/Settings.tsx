@@ -2,19 +2,22 @@
 import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../utils/redux";
 // import { useHistory } from "react-router";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { config } from "dotenv";
+// import { config } from "dotenv";
 //my imports
 import ChangePasswordForm from "./ChangePassword";
-import SelectImage from "./SelectImage";
+import SelectImage from "../../components/select_image/SelectImage";
 // import {
 //   editUserInfo,
 //   changeCurrency,
 //   removeAvatar,
 // } from "../../redux/auth/authActions";
 import DeleteConfirmation from "../../components/delete_confirmation/DeleteConfirmation";
-import { toggleDeleteConfirmation } from "../../state/delete_confirmation/deleteConfirmation";
+import {
+  toggleDeleteAccount,
+  toggleDeleteAllInvoice,
+} from "../../state/delete_confirmation/deleteConfirmation";
 import { switchTheme } from "../../state/theme/theme";
 import { infoSchema } from "./settingsSchema";
 import Text from "../../components/text/Text";
@@ -30,9 +33,16 @@ import leftArrow from "../../assets/icon-arrow-left.svg";
 import SettingsStyles from "./SettingsStyles";
 import { CurrencyInterface } from "../../types";
 import GoBack from "../../components/go_back/GoBack";
+import colors from "../../utils/colors";
+
+type BasicInfoType = {
+  // firstName: string;
+  // lastName: string;
+  // email: string
+};
 
 function Settings() {
-  config();
+  // config();
   const classes = SettingsStyles();
   // const history = useHistory();
   const dispatch = useAppDispatch();
@@ -77,13 +87,13 @@ function Settings() {
     else setChecked(false);
   }, [darkTheme]);
 
-  const sumbitBasicInfo = (data) => {
+  const sumbitBasicInfo: SubmitHandler<BasicInfoType> = (data) => {
     // dispatch(editUserInfo(data));
   };
 
-  const handleCurrency = (e) => {
-    // dispatch(changeCurrency(e.target.value));
-  };
+  // const handleCurrency = (e) => {
+  //   // dispatch(changeCurrency(e.target.value));
+  // };
 
   const deleteAvatar = () => {
     // dispatch(removeAvatar());
@@ -92,7 +102,7 @@ function Settings() {
   return (
     <div className={classes.Settings}>
       {/* conditionally render modal for delete actions */}
-      {deleteConfirmation && <DeleteConfirmation id={user._id} />}
+      {deleteConfirmation.visible && <DeleteConfirmation id={user._id} />}
       {/* conditionally render image selection modals */}
       {showImageSelector && <SelectImage toggle={setShowImageSelector} />}
 
@@ -101,9 +111,7 @@ function Settings() {
       <div className={classes.wrapper}>
         {/* profile section */}
         <section className={classes.profile}>
-          <Text as="p" className={classes.group__heading}>
-            Profile
-          </Text>
+          <p className={classes.group__heading}>Profile</p>
 
           <Card
             style={{
@@ -115,7 +123,7 @@ function Settings() {
           >
             <div
               className={classes.profile_pic}
-              style={{ borderColor: darkTheme ? "#7C5DFA" : "" }}
+              style={{ borderColor: darkTheme ? colors.dark.primary : "" }}
             >
               {user.avatar ? (
                 <img
@@ -151,9 +159,7 @@ function Settings() {
         <div className={classes.vertical__divider}></div>
 
         <section className={classes.settings__main}>
-          <Text as="p" className={classes.group__heading}>
-            Basic Info
-          </Text>
+          <p className={classes.group__heading}>Basic Info</p>
           <Card>
             <form
               className={classes.basic__info}
@@ -192,9 +198,7 @@ function Settings() {
             </form>
           </Card>
 
-          <Text as="p" className={classes.group__heading}>
-            Preferences
-          </Text>
+          <p className={classes.group__heading}>Preferences</p>
 
           <Card>
             <div className={classes.preferences__unit}>
@@ -222,9 +226,7 @@ function Settings() {
             </div>
           </Card>
 
-          <Text as="p" className={classes.group__heading}>
-            Account Actions
-          </Text>
+          <p className={classes.group__heading}>Account Actions</p>
 
           <Card style={{ marginBottom: "10rem" }}>
             <ChangePasswordForm />
@@ -237,7 +239,7 @@ function Settings() {
               <button
                 className={`${classes.profile__btn} ${classes.delete__btn}`}
                 onClick={() => {
-                  dispatch(toggleDeleteConfirmation());
+                  dispatch(toggleDeleteAllInvoice());
                 }}
               >
                 <WarningRoundedIcon />
@@ -248,7 +250,7 @@ function Settings() {
             <div className={classes.delete__account}>
               <p>Delete Account</p>
               <button
-                onClick={() => dispatch(toggleDeleteConfirmation)}
+                onClick={() => dispatch(toggleDeleteAccount())}
                 className={`${classes.profile__btn} ${classes.delete__btn}`}
                 style={{ backgroundColor: "#EC5757" }}
               >
