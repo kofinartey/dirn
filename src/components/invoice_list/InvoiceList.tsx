@@ -13,7 +13,7 @@ type InvoiceListProps = {
 
 function InvoiceList({ filters }: InvoiceListProps) {
   const classes = InvoiceListStyles();
-  const invoiceData = useAppSelector((state) => state.invoices);
+  const invoiceData = useAppSelector((state) => state.invoices.invoices);
   const darkTheme = useAppSelector((state) => state.darkTheme);
   //   const formDisplay = useAppSelector((state) => state.formDisplay);
   //   const loading = useAppSelector((state) => state.invoice.loading);

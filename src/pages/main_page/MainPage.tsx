@@ -31,7 +31,8 @@ const listVariants = {
 function MainPage() {
   const classes = MainPageStyles();
   const darkTheme = useAppSelector((state) => state.darkTheme);
-  const invoiceData = useAppSelector((state) => state.invoices);
+  const invoiceData = useAppSelector((state) => state.invoices.invoices);
+  console.log(invoiceData);
   const formDisplay = useAppSelector((state) => state.formDisplay);
   // const showNotifications = useSelector((state) => state.notifications.visible);
   const dispatch = useAppDispatch();

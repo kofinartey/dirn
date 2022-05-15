@@ -48,7 +48,7 @@ function InvoiceDetails() {
   const classes = InvoiceDetailsStyles();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const invoiceData = useAppSelector((state) => state.invoices);
+  const invoiceData = useAppSelector((state) => state.invoices.invoices);
   const invoice = invoiceData.find((invoice) => invoice.id === id);
   const darkTheme = useAppSelector((state) => state.darkTheme);
   const deleteConfirmation = useAppSelector(
