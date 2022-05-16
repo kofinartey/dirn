@@ -16,6 +16,9 @@ import Text from "../text/Text";
 import Button from "../button/Button";
 import ItemList from "../items_list/ItemList";
 import {
+  postInvoice,
+  postDraft,
+  editInvoice,
   addInvoiceActionCreator,
   editInvoiceActionCreator,
 } from "../../state/invoices/invoices";
@@ -129,17 +132,14 @@ function Form({ values }: FormProps) {
       items: itemList,
       total: itemList.length === 0 ? 0 : total,
     };
-    //decide whether to send complete form or send draft
-    dispatch(addInvoiceActionCreator(dataToAdd));
+    if (validating) {
+      dispatch(postInvoice(dataToAdd));
+    } else dispatch(postDraft(dataToAdd));
     resetAll();
-    //TODO
-    // if (validating) dispatch(postInvoice(dataToAdd));
-    // resetAll();
-    // else dispatch(postDraft(dataToAdd));
   };
 
   const handleEdit: SubmitHandler<FormInputInterface> = (data) => {
-    let dataToAdd = {
+    let dataToAdd: InvoiceInterface = {
       id: values!.id,
       createdAt: dayjs(date).format("D MMM YYYY"),
       paymentDue: dueDate,
@@ -163,9 +163,14 @@ function Form({ values }: FormProps) {
       items: itemList,
       total: itemList.length === 0 ? 0 : total,
     };
-    dispatch(editInvoiceActionCreator(dataToAdd));
+    let toPass = {
+      id: values!._id,
+      invoiceData: dataToAdd,
+    };
+    // dispatch(editInvoiceActionCreator(dataToAdd));
+    dispatch(editInvoice(toPass));
     //TODO
-    // dispatch(patchInvoice(props.values._id, dataToAdd));
+    // dispatch(patchInvoice(toPass));
     resetAll();
   };
   //remove validation for draft and reset validation state
@@ -252,7 +257,7 @@ function Form({ values }: FormProps) {
               <Label htmlFor="street">Street Address</Label>
               <Input
                 id="street"
-                value={values && values.senderAddress.street}
+                defaultValue={values && values.senderAddress.street}
                 {...register("street")}
               />
               <small className={classes.errors}>{errors.street?.message}</small>
@@ -263,7 +268,7 @@ function Form({ values }: FormProps) {
                 <Label htmlFor="city">City</Label>
                 <Input
                   id="city"
-                  value={values && values.senderAddress.city}
+                  defaultValue={values && values.senderAddress.city}
                   {...register("city")}
                 />
                 <p className={classes.errors}>{errors.city?.message}</p>
@@ -272,7 +277,7 @@ function Form({ values }: FormProps) {
                 <Label htmlFor="postcode">Post Code</Label>
                 <Input
                   id="postcode"
-                  value={values && values.senderAddress.postCode}
+                  defaultValue={values && values.senderAddress.postCode}
                   {...register("postcode")}
                 />
                 <p className={classes.errors}>{errors.postcode?.message}</p>
@@ -281,7 +286,7 @@ function Form({ values }: FormProps) {
                 <Label htmlFor="country">Country</Label>
                 <Input
                   id="country"
-                  value={values && values.senderAddress.country}
+                  defaultValue={values && values.senderAddress.country}
                   {...register("country")}
                 />
                 <p className={classes.errors}>{errors.country?.message}</p>
@@ -294,7 +299,7 @@ function Form({ values }: FormProps) {
               <Label htmlFor="clientName">Client's Name</Label>
               <Input
                 id="clientName"
-                value={values && values.clientName}
+                defaultValue={values && values.clientName}
                 {...register("clientName")}
               />
               <p className={classes.errors}>{errors.clientName?.message}</p>
@@ -303,7 +308,7 @@ function Form({ values }: FormProps) {
               <Label htmlFor="clientEmail">Client's Email</Label>
               <Input
                 id="clientEmail"
-                value={values && values.clientEmail}
+                defaultValue={values && values.clientEmail}
                 {...register("clientEmail")}
               />
               <p className={classes.errors}>{errors.clientEmail?.message}</p>
@@ -312,7 +317,7 @@ function Form({ values }: FormProps) {
               <Label htmlFor="clientStreet">Street Address</Label>
               <Input
                 id="clientStreet"
-                value={values && values.clientAddress.street}
+                defaultValue={values && values.clientAddress.street}
                 {...register("clientStreet")}
               />
               <p className={classes.errors}>{errors.clientStreet?.message}</p>
@@ -323,7 +328,7 @@ function Form({ values }: FormProps) {
                 <Label htmlFor="clientCity">City</Label>
                 <Input
                   id="clientCity"
-                  value={values && values.clientAddress.city}
+                  defaultValue={values && values.clientAddress.city}
                   {...register("clientCity")}
                 />
                 <p className={classes.errors}>{errors.clientCity?.message}</p>
@@ -332,7 +337,7 @@ function Form({ values }: FormProps) {
                 <Label htmlFor="clientPostCode">Post Code</Label>
                 <Input
                   id="clientPostCode"
-                  value={values && values.clientAddress.postCode}
+                  defaultValue={values && values.clientAddress.postCode}
                   {...register("clientPostCode")}
                 />
                 <p className={classes.errors}>
@@ -343,7 +348,7 @@ function Form({ values }: FormProps) {
                 <Label htmlFor="clientCountry">Country</Label>
                 <Input
                   id="clientCountry"
-                  value={values && values.clientAddress.country}
+                  defaultValue={values && values.clientAddress.country}
                   {...register("clientCountry")}
                 />
                 <p className={classes.errors}>
@@ -358,7 +363,7 @@ function Form({ values }: FormProps) {
                 <Input
                   type="date"
                   id="invoiceDate"
-                  value={values ? values.createdAt : date}
+                  defaultValue={values ? values.createdAt : date}
                   onChange={(e) => {
                     setDate(e.target.value);
                   }}
@@ -378,7 +383,7 @@ function Form({ values }: FormProps) {
               <Label htmlFor="description">Description</Label>
               <Input
                 id="description"
-                value={values && values.description}
+                defaultValue={values && values.description}
                 {...register("description")}
               />
               <p className={classes.errors}>{errors.description?.message}</p>

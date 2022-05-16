@@ -27,7 +27,7 @@ function Invoice({ data }: InvoiceProps) {
     <Link
       // TODO
       // to={`/invoice/${data._id}/${data.id}`}
-      to={`/invoice/${data.id}`}
+      to={`/invoice/${data._id}/${data.id}`}
       className={classes.Invoice}
       style={{
         backgroundColor: darkTheme ? "#1E2139" : "",

@@ -37,7 +37,7 @@ function DirnApp() {
       <Routes>
         <Route path="/" element={<Auth />} />
         <Route path="/main" element={<MainPage />} />
-        <Route path="/invoice/:id" element={<InvoiceDetails />} />
+        <Route path="/invoice/:_id/:id" element={<InvoiceDetails />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>
     </div>

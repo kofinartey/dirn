@@ -1,10 +1,15 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, memo } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAppSelector, useAppDispatch } from "../../utils/redux";
 
 //my imports
 
-import { removeInvoiceActionCreator } from "../../state/invoices/invoices";
+import {
+  deleteInvoice,
+  deleteAllInvoices,
+  removeInvoiceActionCreator,
+} from "../../state/invoices/invoices";
 import { hideDeleteConfirmation } from "../../state/delete_confirmation/deleteConfirmation";
 // import {
 //   deletedNotification,
@@ -23,6 +28,7 @@ type DeleteConfirmationProps = {
 
 function DeleteConfirmation({ id, _id }: DeleteConfirmationProps) {
   const classes = DeleteComfirmationStyles();
+  const navigate = useNavigate();
   const darkTheme = useAppSelector((state) => state.darkTheme);
   const deleteConfirmation = useAppSelector(
     (state) => state.deleteConfirmation
@@ -50,33 +56,29 @@ function DeleteConfirmation({ id, _id }: DeleteConfirmationProps) {
     } else {
       setBtnDisabled(true);
     }
-  }, [confirmText]);
+  }, [confirmText, textTarget]);
 
   //check when to disable delete button
-  const checkButtonDisabled = deleteType === "account" ? btnDisabled : false;
+  const checkButtonDisabled = deleteType === "invoice" ? btnDisabled : false;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmText(event.target.value);
   };
 
-  const handleDelete = () => {
-    if (confirmText.trim() === textTarget) {
-      console.log("equal");
-      dispatch(removeInvoiceActionCreator({ id: id }));
-      //TODO: change after implementing backend
-      // dispatch(removeInvoiceActionCreator(props._id));
-    } else {
-      console.log("not equal");
-    }
+  const handleDeleteInvoice = () => {
+    dispatch(deleteInvoice(_id!));
+    navigate("/main");
+  };
+  const handleDeleteAllInvoices = () => {
+    dispatch(deleteAllInvoices(user._id));
+  };
+  const handleDeleteAccount = () => {};
 
-    // setTimeout(() => {
-    //   props.history.push("/main");
-    //   dispatch(toggleConfirmation());
-    // }, 300);
-    // dispatch(deletedNotification());
-    // setTimeout(() => {
-    //   dispatch(hideNotification());
-    // }, 2000);
+  //main delete function
+  const handleDelete = () => {
+    if (deleteType === "invoice") return handleDeleteInvoice();
+    if (deleteType === "all-invoices") return handleDeleteAllInvoices();
+    if (deleteType === "account") return handleDeleteAccount();
   };
 
   const invoiceInstruction = (
@@ -172,4 +174,4 @@ function DeleteConfirmation({ id, _id }: DeleteConfirmationProps) {
   );
 }
 
-export default DeleteConfirmation;
+export default memo(DeleteConfirmation);

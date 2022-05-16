@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, memo } from "react";
 import { makeStyles } from "@mui/styles";
 import { useAppSelector } from "../../utils/redux";
 
@@ -43,4 +43,4 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-export default Input;
+export default memo(Input);

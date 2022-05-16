@@ -85,7 +85,7 @@ export const signup = createAsyncThunk(
 );
 
 const initialState = {
-  userInfo: userDetails,
+  userInfo: [],
   loading: false,
   error: "",
 };
