@@ -20,7 +20,6 @@ import {
 } from "../../state/delete_confirmation/deleteConfirmation";
 import { switchTheme } from "../../state/theme/theme";
 import { infoSchema } from "./settingsSchema";
-import Text from "../../components/text/Text";
 import Button from "../../components/button/Button";
 import Card from "../../components/card/Card";
 import Label from "../../components/form_elements/Label";
@@ -65,7 +64,7 @@ function Settings() {
 
   const [currency, setCurrency] = useState(() => {
     return currencies.find(
-      (currency) => currency.value === user.settings.currency
+      (currency) => currency.value === user.settings!.currency
     );
   });
 
@@ -102,7 +101,7 @@ function Settings() {
   return (
     <div className={classes.Settings}>
       {/* conditionally render modal for delete actions */}
-      {deleteConfirmation.visible && <DeleteConfirmation id={user._id} />}
+      {deleteConfirmation.visible && <DeleteConfirmation id={user._id!} />}
       {/* conditionally render image selection modals */}
       {showImageSelector && <SelectImage toggle={setShowImageSelector} />}
 

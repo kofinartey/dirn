@@ -49,7 +49,7 @@ function DeleteConfirmation({ id, _id }: DeleteConfirmationProps) {
   // }, [deleteConfirmation]);
 
   //value to check user input against
-  const textTarget = `${user.firstName.toLowerCase()}/#${id}`;
+  const textTarget = `${user.firstName!.toLowerCase()}/#${id}`;
   useEffect(() => {
     if (confirmText.trim() === textTarget) {
       setBtnDisabled(false);
@@ -70,7 +70,7 @@ function DeleteConfirmation({ id, _id }: DeleteConfirmationProps) {
     navigate("/main");
   };
   const handleDeleteAllInvoices = () => {
-    dispatch(deleteAllInvoices(user._id));
+    dispatch(deleteAllInvoices(user._id!));
   };
   const handleDeleteAccount = () => {};
 
@@ -88,7 +88,7 @@ function DeleteConfirmation({ id, _id }: DeleteConfirmationProps) {
       <p>
         Please type{" "}
         <span className={classes.highlight}>
-          {user.firstName.toLowerCase()}/#{id}
+          {user.firstName!.toLowerCase()}/#{id}
         </span>{" "}
         to confirm
       </p>

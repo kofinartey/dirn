@@ -2,9 +2,9 @@
 import { ReactElement, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../utils/redux";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 //my imports
-// import { logout } from "../../redux/auth/authActions";
+import { logout } from "../../state/user/userSlice";
 import { switchTheme } from "../../state/theme/theme";
 import avatar from "../../assets/image-avatar.jpg";
 import Card from "../card/Card";
@@ -23,11 +23,13 @@ import ModeNightIcon from "@mui/icons-material/ModeNight";
 type DropDownMenuProps = {
   children: React.ReactNode;
 };
+
 type DropDownItemProps = {
   children?: React.ReactNode;
   text?: string;
   leftIcon?: ReactElement;
   rightIcon?: ReactElement;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 } & React.ComponentProps<"div">;
 
 const DropDownMenu = (props: DropDownMenuProps) => {
@@ -49,7 +51,7 @@ const DropDownItem = (props: DropDownItemProps) => {
   const classes = AvatarStyles();
 
   return (
-    <div className={classes.DropDownItem}>
+    <div className={classes.DropDownItem} onClick={props.onClick}>
       <span>{props.leftIcon}</span>
       <p>{props.children}</p>
       <span>{props.rightIcon}</span>
@@ -65,9 +67,7 @@ function Avatar() {
   const userName = `${user.firstName} ${user.lastName}`;
   const darkTheme = useAppSelector((state) => state.darkTheme);
   const dispatch = useAppDispatch();
-
-  //TODO: use useNavigate()
-  //   const history = useHistory();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setOpen(!open);
@@ -75,7 +75,8 @@ function Avatar() {
   };
 
   const signOut = () => {
-    // dispatch(logout(history));
+    console.log("sign out called");
+    dispatch(logout(navigate));
   };
 
   const DefaultAvatar = () => {
@@ -87,7 +88,7 @@ function Avatar() {
             alt=""
           />
         ) : (
-          <p>{user.firstName[0].toUpperCase()}</p>
+          <p>{user.firstName && user.firstName[0].toUpperCase()}</p>
         )}
       </div>
     );
@@ -143,7 +144,11 @@ function Avatar() {
                     style={{ color: darkTheme ? "white" : "black" }}
                     onClick={toggleMenu}
                   >
-                    <DropDownItem text="Settings" leftIcon={<SettingsIcon />}>
+                    <DropDownItem
+                      text="Settings"
+                      leftIcon={<SettingsIcon />}
+                      onClick={() => console.log("item Clicked")}
+                    >
                       Settings
                     </DropDownItem>
                   </Link>
@@ -152,6 +157,7 @@ function Avatar() {
                     leftIcon={<HelpCenterIcon />}
                     rightIcon={<ArrowRightIcon />}
                     onClick={() => {
+                      console.log("help clicked");
                       setMenu("help");
                     }}
                   >

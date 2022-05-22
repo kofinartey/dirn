@@ -56,7 +56,7 @@ function InvoiceDetails() {
     (state) => state.deleteConfirmation
   );
   const currency = useAppSelector(
-    (state) => state.user.userInfo.settings.currency
+    (state) => state.user.userInfo.settings!.currency
   );
   const formDisplay = useAppSelector((state) => state.formDisplay);
   const formatDate = (date: string) => {

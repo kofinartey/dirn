@@ -13,15 +13,16 @@ import DirnAppStyles from "./DirnAppStyles";
 function DirnApp() {
   const classes = DirnAppStyles();
   const darkTheme = useAppSelector((state) => state.darkTheme);
+  const user = useAppSelector((state) => state.user.userInfo);
   const dispatch = useAppDispatch();
   const location = useLocation();
 
   //load invoices when login is successful
   useEffect(() => {
-    if (location.pathname !== "/") {
+    if (user && location.pathname !== "/") {
       dispatch(fetchInvoices());
     }
-  }, [dispatch, location.pathname]);
+  }, [dispatch, location.pathname, user]);
 
   return (
     <div
@@ -36,7 +37,7 @@ function DirnApp() {
       )}
       <Routes>
         <Route path="/" element={<Auth />} />
-        <Route path="/main" element={<MainPage />} />
+        {user && <Route path="/main" element={<MainPage />} />}
         <Route path="/invoice/:_id/:id" element={<InvoiceDetails />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>

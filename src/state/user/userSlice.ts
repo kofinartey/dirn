@@ -2,18 +2,21 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { NavigateFunction } from "react-router-dom";
 import { UserInterface } from "../../types";
 
-const userDetails: UserInterface = {
-  firstName: "Kofi",
-  lastName: "Nartey",
-  email: "kofinartey@gmail.com",
-  role: "user",
-  _id: "1234567890",
-  settings: {
-    darkTheme: false,
-    currency: "$",
-    _id: "09876543321",
-  },
-};
+const userDetails: UserInterface =
+  JSON.parse(localStorage.getItem("userInfo") || "{}") ||
+  {
+    // firstName: "Kofi",
+    // lastName: "Nartey",
+    // email: "kofinartey@gmail.com",
+    // role: "user",
+    // _id: "1234567890",
+    // settings: {
+    //   darkTheme: false,
+    //   currency: "$",
+    //   _id: "09876543321",
+    // },
+  };
+
 interface MyKnownError {
   errorMessage: string;
   // ...
@@ -84,8 +87,15 @@ export const signup = createAsyncThunk(
   }
 );
 
+export const logout = createAsyncThunk(
+  "user/logout",
+  async (navigate: NavigateFunction) => {
+    navigate("/");
+  }
+);
+
 const initialState = {
-  userInfo: [],
+  userInfo: userDetails,
   loading: false,
   error: "",
 };
@@ -112,12 +122,16 @@ const userSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       localStorage.setItem("userInfo", JSON.stringify(action.payload));
       state.loading = false;
-      state = action.payload;
+      state.userInfo = action.payload;
     });
     builder.addCase(login.rejected, (state, action) => {
       //@ts-ignore
       state.error = action.payload;
       state.loading = false;
+    });
+    builder.addCase(logout.fulfilled, (state, action) => {
+      state.userInfo = userDetails;
+      localStorage.clear();
     });
   },
 });

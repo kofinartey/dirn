@@ -28,13 +28,13 @@ export interface ItemInterface {
 }
 
 export interface UserInterface {
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  _id: string;
+  _id?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  role?: string;
   avatar?: string;
-  settings: {
+  settings?: {
     darkTheme: boolean;
     currency: string;
     _id: string;
