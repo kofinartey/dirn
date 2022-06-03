@@ -21,18 +21,71 @@ type EditInvoiceDataType = {
 export const fetchInvoices = createAsyncThunk(
   "fetchInvoices",
   async (args, { rejectWithValue }) => {
-    const token = JSON.parse(localStorage.getItem("userInfo") || "{}").token!;
-    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/invoices`, {
+    let url_fetchInvoices = `${process.env.REACT_APP_BASE_URL}/invoices`;
+    //implementing cache, then network strategy
+    //simultaneously send a fetch request for invoices
+
+    // const response = await fetch(url_fetchInvoices, {
+    //   headers: {
+    //     "x-auth-token": TOKEN,
+    //   },
+    // });
+    // const data = await response.json();
+    // if (response.ok) {
+    //   console.log("invoice from NETWORK", data);
+    //   return data;
+    // } else {
+    //   // return rejectWithValue(data);
+    // }
+
+    // //check cache for data
+    // // if ("caches" in window) {
+    // const cacheResponse = await caches.match(url_fetchInvoices);
+    // let cacheData;
+    // if (cacheResponse) {
+    //   cacheData = await cacheResponse.json();
+    //   console.log("invoice from CACHE ", cacheData);
+    //   return cacheData;
+    // }
+    // }
+
+    //2
+    const getFromCache = caches
+      .match(url_fetchInvoices)
+      .then((response) => {
+        if (response) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log("invoices from CACHE", data);
+        return data;
+      });
+
+    const getFromFetch = fetch(url_fetchInvoices, {
       headers: {
-        "x-auth-token": token,
+        "x-auth-token": TOKEN,
       },
-    });
-    const data = await response.json();
-    if (response.ok) {
-      return data;
-    } else {
-      return rejectWithValue(data);
-    }
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return rejectWithValue(response.json());
+        }
+      })
+      .then((data) => {
+        console.log("invoices from FETCH", data);
+        return data;
+      });
+
+    console.log(
+      "THE ACCEPTED ON IS ",
+      await Promise.race([getFromFetch, getFromCache])
+    );
+    console.log("getFromFetch => ", getFromFetch);
+    console.log("getFromFetch => ", getFromCache);
+    return await Promise.race([getFromCache, getFromFetch]);
   }
 );
 
@@ -185,6 +238,7 @@ const invoicesSlice = createSlice({
     builder.addCase(fetchInvoices.pending, () => {});
     builder.addCase(fetchInvoices.rejected, () => {});
     builder.addCase(fetchInvoices.fulfilled, (state, action) => {
+      console.log(" INSIDE INVOICE REDUCER", action);
       state.invoices = action.payload;
     });
     //post invoice extra reducers

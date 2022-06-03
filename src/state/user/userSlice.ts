@@ -43,22 +43,30 @@ type LoginDataType = {
 export const login = createAsyncThunk(
   "user/login",
   async ({ formData, navigate }: LoginDataType, { rejectWithValue }) => {
-    const response = await fetch(
-      `${process.env.REACT_APP_BASE_URL}/users/login`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    try {
+      console.log("From  ACTUALL CODE");
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/users/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      console.log("reached here");
+
+      if (response.ok) {
+        navigate("/main");
+        const data = await response.json();
+        return data;
+      } else {
+        return rejectWithValue((await response.json()) as MyKnownError);
       }
-    );
-    if (response.ok) {
-      navigate("/main");
-      const data = await response.json();
-      return data;
-    } else {
-      return rejectWithValue((await response.json()) as MyKnownError);
+    } catch (error) {
+      // return error;
+      console.log(error);
     }
   }
 );
