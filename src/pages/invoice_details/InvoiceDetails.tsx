@@ -1,5 +1,5 @@
 //package imports
-import React, { useState, memo } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { useAppSelector, useAppDispatch } from "../../utils/redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -18,7 +18,10 @@ import {
 } from "../../state/delete_confirmation/deleteConfirmation";
 import { patchStatus } from "../../state/invoices/invoices";
 // import { toggleConfirmation } from "../../redux/delete_confirmation/deleteConfirmationActions";
-import { markInvoiceActionCreator } from "../../state/invoices/invoices";
+import {
+  fetchInvoices,
+  markInvoiceActionCreator,
+} from "../../state/invoices/invoices";
 import formatAmount from "../../helper_functions/formatAmount";
 import InvoiceDetailsStyles from "./InvoiceDetailsStyles";
 import leftArrow from "../../assets/icon-arrow-left.svg";
